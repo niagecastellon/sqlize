@@ -1,5 +1,5 @@
-const {Model, DataTypes} = require('sequelize');
-const sequelize = require('../config');
+const { Model, DataTypes } = require('sequelize')
+const sequelize = require('../config')
 
 class Aeroporto extends Model {}
 
@@ -10,7 +10,7 @@ Aeroporto.init({
         allowNull: false
     },
     nome: {
-        type: DataTypes.STRING(20),
+        type: DataTypes.STRING(20)
     },
     fkcategoria: {
         type: DataTypes.TINYINT
@@ -18,11 +18,11 @@ Aeroporto.init({
     fkcitta: {
         type: DataTypes.SMALLINT
     }
-}, {
+},{
     sequelize,
-    modelName: 'Aeroporto',
-    tableName: 'Aeroporto',
+    modelName: 'Aeroporti',
+    tableName: 'Aeroporti',
     timestamps: false
-});
+})
 
 module.exports = Aeroporto;

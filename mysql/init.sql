@@ -1,9 +1,11 @@
+DROP DATABASE IF EXISTS compagniaaerea;
+
 CREATE DATABASE compagniaaerea;
 
 USE compagniaaerea;
 
 -- definizione tabelle
-CREATE TABLE Volo(
+CREATE TABLE Voli(
 	id int primary key auto_increment,
 	orariopartenza timestamp,
 	durataminuti smallint,
@@ -11,40 +13,37 @@ CREATE TABLE Volo(
 	fkaeroportoarrivo smallint
 );
 
-CREATE TABLE Giornaliero(
+CREATE TABLE Giornalieri(
 	fkvolo int
 );
 
-CREATE TABLE Settimanale(
+CREATE TABLE Settimanali(
 	fkvolo int,
 	giornosettimana tinyint
 );
 
-CREATE TABLE Mensile(
+CREATE TABLE Mensili(
 	fkvolo int,
 	giornomese tinyint
 );
 
-CREATE TABLE Aeroporto(
+CREATE TABLE Aeroporti(
 	codice smallint primary key,
 	nome varchar(20),
 	fkcategoria tinyint,
 	fkcitta smallint
 );
 
-CREATE TABLE Tappaintermedia(
+CREATE TABLE Tappeintermedie(
 	fkvolo int,
 	fkaeroporto smallint,
 	ordine tinyint
 );
 
-CREATE TABLE Categoria(
+CREATE TABLE Categorie(
 	id tinyint primary key auto_increment, -- tinyint perchè non ci sono molte categorie
 	nome varchar(20)
 );
-
-
-
 
 CREATE TABLE Citta(
 	id smallint primary key auto_increment,
@@ -53,12 +52,12 @@ CREATE TABLE Citta(
 	fkregione smallint
 );
 
-CREATE TABLE Regione(
+CREATE TABLE Regioni(
 	id smallint primary key auto_increment,
 	nome varchar(50)
 );
 
-CREATE TABLE Mensileregione(
+CREATE TABLE Mensiliregioni(
 	fkmensile int,
 	fkregione smallint
 );
@@ -67,43 +66,43 @@ CREATE TABLE Mensileregione(
 -- definizione vincoli primary key
 -- ----------------------------------------
 
-ALTER TABLE Giornaliero ADD CONSTRAINT PKGiornaliero PRIMARY KEY (fkvolo);
+ALTER TABLE Giornalieri ADD CONSTRAINT PKGiornaliero PRIMARY KEY (fkvolo);
 
-ALTER TABLE Settimanale ADD CONSTRAINT PKSettimanale PRIMARY KEY (fkvolo);
+ALTER TABLE Settimanali ADD CONSTRAINT PKSettimanale PRIMARY KEY (fkvolo);
 
-ALTER TABLE Mensile ADD CONSTRAINT PKMensile PRIMARY KEY (fkvolo);
+ALTER TABLE Mensili ADD CONSTRAINT PKMensile PRIMARY KEY (fkvolo);
 
-ALTER TABLE Mensileregione ADD CONSTRAINT PKMensileregione PRIMARY KEY (fkmensile,fkregione);
+ALTER TABLE Mensiliregioni ADD CONSTRAINT PKMensileregione PRIMARY KEY (fkmensile,fkregione);
 
-ALTER TABLE Tappaintermedia ADD CONSTRAINT PKTappaintermedia PRIMARY KEY (fkvolo,fkaeroporto);
+ALTER TABLE Tappeintermedie ADD CONSTRAINT PKTappaintermedia PRIMARY KEY (fkvolo,fkaeroporto);
 
 -- ---------------------------------------
 -- definizione vincoli foreign key
 -- ----------------------------------------
 
-ALTER TABLE Volo ADD CONSTRAINT FKVoloAreoportopartenza FOREIGN KEY (fkareoportopartenza) REFERENCES Aeroporto(codice);
-ALTER TABLE Volo ADD CONSTRAINT FKVoloAreoportoarrivo FOREIGN KEY (fkareoportoarrivo) REFERENCES Aeroporto(codice);
+ALTER TABLE Voli ADD CONSTRAINT FKVoloAreoportopartenza FOREIGN KEY (fkaeroportopartenza) REFERENCES Aeroporti(codice);
+ALTER TABLE Voli ADD CONSTRAINT FKVoloAreoportoarrivo FOREIGN KEY (fkaeroportoarrivo) REFERENCES Aeroporti(codice);
 
-ALTER TABLE Giornaliero ADD CONSTRAINT FKGiornalieroVolo FOREIGN KEY (fkvolo) REFERENCES Volo(id);
+ALTER TABLE Giornalieri ADD CONSTRAINT FKGiornalieroVolo FOREIGN KEY (fkvolo) REFERENCES Voli(id);
 
-ALTER TABLE Settimanale ADD CONSTRAINT FKSettimanaleVolo FOREIGN KEY (fkvolo) REFERENCES Volo(id);
+ALTER TABLE Settimanali ADD CONSTRAINT FKSettimanaleVolo FOREIGN KEY (fkvolo) REFERENCES Voli(id);
 
-ALTER TABLE Mensile ADD CONSTRAINT FKMensileVolo FOREIGN KEY (fkvolo) REFERENCES Volo(id);
+ALTER TABLE Mensili ADD CONSTRAINT FKMensileVolo FOREIGN KEY (fkvolo) REFERENCES Voli(id);
 
-ALTER TABLE Aeroporto ADD CONSTRAINT FKAeroportoCategoria FOREIGN KEY (fkcategoria) REFERENCES Categoria(id);
-ALTER TABLE Aeroporto ADD CONSTRAINT FKAeroportoCitta FOREIGN KEY (fkcitta) REFERENCES Citta(id);
+ALTER TABLE Aeroporti ADD CONSTRAINT FKAeroportoCategoria FOREIGN KEY (fkcategoria) REFERENCES Categorie(id);
+ALTER TABLE Aeroporti ADD CONSTRAINT FKAeroportoCitta FOREIGN KEY (fkcitta) REFERENCES Citta(id);
 
-ALTER TABLE Tappaintermedia ADD CONSTRAINT FKTappaintermediaVolo FOREIGN KEY (fkvolo) REFERENCES Volo(id);
-ALTER TABLE Tappaintermedia ADD CONSTRAINT FKTappaintermediaAeroporto FOREIGN KEY (fkaeroporto) REFERENCES Aeroporto(codice);
+ALTER TABLE Tappeintermedie ADD CONSTRAINT FKTappaintermediaVolo FOREIGN KEY (fkvolo) REFERENCES Voli(id);
+ALTER TABLE Tappeintermedie ADD CONSTRAINT FKTappaintermediaAeroporto FOREIGN KEY (fkaeroporto) REFERENCES Aeroporti(codice);
 
-ALTER TABLE Citta ADD CONSTRAINT FKCittaRegione FOREIGN KEY (fkregione) REFERENCES Regione(id);
+ALTER TABLE Citta ADD CONSTRAINT FKCittaRegione FOREIGN KEY (fkregione) REFERENCES Regioni(id);
 
-ALTER TABLE Mensileregione ADD CONSTRAINT FKMensileregioneMensile FOREIGN KEY (fkmensile) REFERENCES Mensile(fkvolo);
-ALTER TABLE Mensileregione ADD CONSTRAINT FKMensileregioneRegione FOREIGN KEY (fkregione) REFERENCES Regione(id);
+ALTER TABLE Mensiliregioni ADD CONSTRAINT FKMensileregioneMensile FOREIGN KEY (fkmensile) REFERENCES Mensili(fkvolo);
+ALTER TABLE Mensiliregioni ADD CONSTRAINT FKMensileregioneRegione FOREIGN KEY (fkregione) REFERENCES Regioni(id);
 
 -- ------------------------
 -- definizione vincoli 
 -- ------------------------
 
-ALTER TABLE Settimanale ADD CONSTRAINT CHECK (giornosettimana > 0 AND giornosettimana < 8);
-ALTER TABLE Mensile ADD CONSTRAINT CHECK (giornomese > 0 AND giornomese < 32);
+ALTER TABLE Settimanali ADD CONSTRAINT CHECK (giornosettimana > 0 AND giornosettimana < 8);
+ALTER TABLE Mensili ADD CONSTRAINT CHECK (giornomese > 0 AND giornomese < 32);

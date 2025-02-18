@@ -7,15 +7,25 @@ services:
     networks:
       - rete
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
+    stdin_open: true
+    tty: true
   
   mysql:
     container_name: "mysql"
     build: ./mysql
     environment:
       - MYSQL_ROOT_PASSWORD=cisco
+      - MYSQL_DATABASE=compagniaaerea
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root","--password=root"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
     volumes:
-      - mysql_data:/var/lib/mysql
+      - mysql-data:/var/lib/mysql
     networks:
       - rete
   
@@ -25,11 +35,15 @@ services:
     ports:
       - "80:80"
     depends_on:
-      - node    
-    
+      - node
+
+
 volumes:
-  mysql_data:
+  mysql-data:
 
 networks:
   rete:
     driver: bridge
+  
+
+    

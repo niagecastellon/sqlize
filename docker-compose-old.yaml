@@ -1,0 +1,21 @@
+services:
+  service1:
+    container_name: "CED"
+    image: "node:latest"
+    volumes:
+      - 'volume1:/data'
+
+  service2:
+    container_name: "Ghandins"
+    image: "mysql"
+    volumes: 
+      - ./dataHOST:/data
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    
+
+
+
+
+volumes:
+  volume1:

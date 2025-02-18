@@ -1,10 +1,12 @@
-const {Model} = require('sequelize');
+const { Model,DataTypes } = require("sequelize")
+const sequelize = require("../config")
 
 class Volo extends Model {}
 
 Volo.init({
     id: {
-        type: DataTypes.SMALLINT,
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
         primaryKey: true,
         allowNull: false
     },
@@ -22,12 +24,11 @@ Volo.init({
         type: DataTypes.SMALLINT,
         allowNull: false
     }
-
-}, {
+},{
     sequelize,
-    modelName: 'Volo',
-    tableName: 'Volo',
+    modelName: "Voli",
+    tableName: "Voli",
     timestamps: false
-});
+})
 
 module.exports = Volo;
