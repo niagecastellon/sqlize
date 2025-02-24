@@ -1,6 +1,7 @@
 const db = require('./tabelle/Associazioni')
 const express = require('express')
-const { Op } = require('sequelize')
+const { Op } = require('sequelize');
+const { where } = require('./config');
 const app = express();
 app.use(express.json())
 
@@ -35,6 +36,7 @@ app.post('/regione', async (req, res) => {
         res.status(500).json({ message: "errore nella creazione regione", error: err })
     }
 })
+
 
 app.post('/citta', async (req, res) => {
     try {
@@ -76,6 +78,7 @@ app.post('/volo', async (req, res) => {
         res.status(500).json({ message: "errore nella creazione volo", error: err })
     }
 })
+
 //mostrare tutti i voli in partenza oggi
 app.get('/voli/:data', async (req, res) => {
     const data = req.params.data
@@ -86,6 +89,26 @@ app.get('/voli/:data', async (req, res) => {
 })
 
 
+app.get("/citta/:citta", async (req, res) => {
+    try {
+        res.json(getVoliPerCitta(req.params.citta))
+        
+    } catch (err) {
+        res.status(500).json({ message: "errore nella ricerca della citta", error: err })
+    }
+});
+
+async function getVoliPerCitta(citta) {
+    return db.tabelle.Volo.findAll({
+        include: {
+            model: db.tabelle.Aeroporto,
+            where: { fkcitta: idCitta },
+            attributes: [],
+            foreignkey: "fkaeroportopartenza"
+        }
+    })
+    
+}
 
 
 app.listen(3000, () => {
